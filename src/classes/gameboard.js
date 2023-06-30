@@ -20,18 +20,18 @@ export class Gameboard {
     }
 
     receiveAttack(location) {
-        const place = this.gameboard[location.y][location.x];
+        const coord = this.gameboard[location.y][location.x];
 
-        if (place === "") {
+        if (coord === "") {
             this.gameboard[location.y][location.x] = "miss";
             return "miss";
         }
 
-        if (typeof place === "object") {
-            place.hit();
+        if (typeof coord === "object") {
+            coord.hit();
             this.gameboard[location.y][location.x] = "[X]";
 
-            if (place.isSunk()) {
+            if (coord.isSunk()) {
                 return "sunk";
             }
             
