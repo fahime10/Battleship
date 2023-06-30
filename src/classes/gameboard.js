@@ -11,7 +11,7 @@ export class Gameboard {
         for (let i = 0; i < ship.length; i++) {
             this.gameboard[location.y][location.x] = ship;
 
-            if (placement == "horizontal") {
+            if (placement === "horizontal") {
                 location.x++;
             } else {
                 location.y++;
@@ -19,6 +19,37 @@ export class Gameboard {
         }
     }
 
+    receiveAttack(location) {
+        const place = this.gameboard[location.y][location.x];
+
+        if (place === "") {
+            this.gameboard[location.y][location.x] = "miss";
+            return "miss";
+        }
+
+        if (typeof place === "object") {
+            place.hit();
+            this.gameboard[location.y][location.x] = "[X]";
+
+            if (place.isSunk()) {
+                return "sunk";
+            }
+            
+            return "hit";
+        }
+    }
+
+    checkSunk() {
+        return this.gameboard.forEach((row) => {
+            row.forEach((element) => {
+                if (typeof element === "object") {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+    }
 }
 
 function createGameboard() {

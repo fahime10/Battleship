@@ -39,5 +39,65 @@ describe("Testing Gameboard class", () => {
         ]);
     });
 
-    
+    test("Receive on target attack", () => {
+        const gameboard = new Gameboard();
+        const ship = new Ship(3);
+
+        gameboard.placeShip({ x: 2, y: 0 }, "horizontal", ship);
+
+        expect(gameboard.receiveAttack({ x: 2, y: 0 })).toBe("hit");
+
+        expect(gameboard.gameboard[0]).toStrictEqual([
+            "", "", "[X]", ship, ship, "", "", "", "", ""
+        ]);
+    });
+
+    test("Receive missed attack", () => {
+        const gameboard = new Gameboard();
+        const ship = new Ship(3);
+
+        gameboard.placeShip({ x: 2, y: 0 }, "horizontal", ship);
+
+        expect(gameboard.receiveAttack({ x: 0, y: 0 })).toBe("miss");
+
+        expect(gameboard.gameboard[0]).toStrictEqual([
+            "miss", "", ship, ship, ship, "", "", "", "", ""
+        ]);
+    });
+
+    test("Report sunk ship", () => {
+        const gameboard = new Gameboard();
+        const ship = new Ship(3);
+
+        gameboard.placeShip({ x: 2, y: 0 }, "horizontal", ship);
+
+        expect(gameboard.receiveAttack({ x: 2, y: 0 })).toBe("hit");
+        expect(gameboard.receiveAttack({ x: 3, y: 0 })).toBe("hit");
+        expect(gameboard.receiveAttack({ x: 4, y: 0 })).toBe("sunk");
+
+
+        expect(gameboard.gameboard[0]).toStrictEqual([
+            "", "", "[X]", "[X]", "[X]", "", "", "", "", ""
+        ]);
+    });
+
+    test("No sunken ship, sir!", () => {
+        const gameboard = new Gameboard();
+        const ship = new Ship(3);
+
+        gameboard.placeShip({ x: 2, y: 0 }, "horizontal", ship);
+
+        expect(gameboard.checkSunk()).toBeFalsy();
+
+        expect(gameboard.receiveAttack({ x: 2, y: 0 })).toBe("hit");
+        expect(gameboard.receiveAttack({ x: 3, y: 0 })).toBe("hit");
+        expect(gameboard.receiveAttack({ x: 5, y: 0 })).toBe("miss");
+
+
+        expect(gameboard.gameboard[0]).toStrictEqual([
+            "", "", "[X]", "[X]", ship, "miss", "", "", "", ""
+        ]);
+
+        expect(gameboard.checkSunk()).toBeFalsy();
+    });
 });
