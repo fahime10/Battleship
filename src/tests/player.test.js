@@ -11,7 +11,7 @@ describe("Testing Player class", () => {
         const moves = [];
         for (let i = 0; i < 10; i++) {
             for (let j = 0; j < 10; j++) {
-                moves.push({ x: j, y: i });
+                moves.push({ x: i, y: j });
             }
         }
 
