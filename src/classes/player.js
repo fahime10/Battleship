@@ -12,7 +12,7 @@ export class Player {
     placeShip(x, y, placement) {
         const availableShip = this.ships.shift();
 
-        this.gameboard.placeShip({ x: x, y: y}, placement, availableShip);
+        this.gameboard.placeShip({ x: x, y: y }, placement, availableShip);
     }
 
     randomAttack() {
@@ -43,7 +43,7 @@ function availableMoves() {
 
     for (let i = 0; i < 10; i++) {
         for (let j = 0; j < 10; j++) {
-            moves.push({ x: j, y: i });
+            moves.push({ x: i, y: j });
         }
     }
 
