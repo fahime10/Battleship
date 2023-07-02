@@ -6,6 +6,13 @@ export class Gameboard {
     placeShip(location, placement, ship) {
         let startPos = JSON.parse(JSON.stringify(location));
 
+        let shipLength = new Array(ship.length).fill(" ");
+        const outOfBounds = this.checkOutOfBounds(location, placement, shipLength);
+
+        if (outOfBounds === "collision") {
+            return outOfBounds;
+        }
+
         location = startPos;
 
         for (let i = 0; i < ship.length; i++) {
@@ -49,6 +56,29 @@ export class Gameboard {
                 }
             });
         });
+    }
+
+    checkOutOfBounds(location, placement, ship) {
+        let check = ship.every(() => {
+            if (location.y > 9 || location.x > 9) {
+                return false;
+            }
+
+            if (typeof this.gameboard[location.y][location.x] === "object") {
+                return false;
+            }
+    
+            if (placement === "horizontal") {
+                location.x++;
+            } else {
+                location.y++;
+            }
+            return true;
+        });
+
+        if (check === false) {
+            return "collision";
+        }
     }
 }
 

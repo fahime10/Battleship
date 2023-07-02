@@ -12,7 +12,22 @@ export class Player {
     placeShip(x, y, placement) {
         const availableShip = this.ships.shift();
 
-        this.gameboard.placeShip({ x: x, y: y }, placement, availableShip);
+        const result = 
+            this.gameboard.placeShip({ x: x, y: y }, placement, availableShip);
+
+        if (result === "collision") {
+            this.ships.unshift(availableShip);
+        }
+    }
+
+    randomShips() {
+        const placement = ["horizontal", "vertical"];
+        while (this.ships.length !== 0) {
+            const x = Math.floor(Math.random() * 9);
+            const y = Math.floor(Math.random() * 9);
+            const thisPlacement = placement[Math.floor(Math.random())];
+            this.placeShip(x, y, thisPlacement);
+        }
     }
 
     randomAttack() {
