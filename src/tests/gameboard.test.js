@@ -100,4 +100,39 @@ describe("Testing Gameboard class", () => {
 
         expect(gameboard.checkSunk()).toBeFalsy();
     });
+
+    test("Overlap ship", () => {
+        const gameboard = new Gameboard();
+        const ship = new Ship(4);
+        const ship2 = new Ship(4);
+
+        gameboard.placeShip({ x: 1, y: 0 }, "horizontal", ship);
+
+        expect(gameboard.placeShip({ x: 4, y: 0 }, "vertical", ship2)).toBe("collision");
+        
+        expect(gameboard.gameboard[0]).toStrictEqual([
+            "", ship, ship, ship, ship, "", "", "", "", ""
+        ]);
+
+        expect(gameboard.gameboard[1]).not.toEqual([
+            "", "", "", "", ship2, "", "", "", "", ""
+        ]);
+        expect(gameboard.gameboard[2]).not.toEqual([
+            "", "", "", "", ship2, "", "", "", "", ""
+        ]);
+        expect(gameboard.gameboard[3]).not.toEqual([
+            "", "", "", "", ship2, "", "", "", "", ""
+        ]);
+    });
+
+    test("Ship out of bounds", () => {
+        const gameboard = new Gameboard();
+        const ship = new Ship(4);
+
+        expect(gameboard.placeShip({ x: 9, y: 0 }, "horizontal", ship)).toBe("collision");
+
+        expect(gameboard.gameboard[0]).toStrictEqual([
+            "", "", "", "", "", "", "", "", "", ""
+        ]);
+    });
 });
