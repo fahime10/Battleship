@@ -34,6 +34,10 @@ export class Gameboard {
             return "miss";
         }
 
+        if (this.gameboard[location.y][location.x] === "[X]") {
+            return;
+        }
+
         if (typeof coord === "object") {
             coord.hit();
             this.gameboard[location.y][location.x] = "[X]";
