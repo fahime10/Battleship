@@ -1,0 +1,47 @@
+body {
+    margin: 0;
+    background-color: aquamarine;
+}
+
+header {
+    text-align: center;
+}
+
+main {
+    height: 80vh;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    font-size: 26px;
+}
+
+.menu input {
+    margin-top: 1rem;
+    border-radius: 5px;
+    font-size: 22px;
+}
+
+.menu button {
+    margin-top: 5rem;
+    height: 3rem;
+    width: 14rem;
+    font-size: 2rem;
+    border-radius: 10px;
+    background-color: rgb(40, 35, 35);
+    color: white;
+}
+
+.menu button:hover {
+    transition: ease-in-out, 1s;
+    transform: scale(1.05);
+}
+
+footer {
+    height: 10vh;
+    text-align: center;
+}
+
