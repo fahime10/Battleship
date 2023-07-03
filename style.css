@@ -8,7 +8,10 @@ header {
 }
 
 main {
-    height: 80vh;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .menu {
@@ -17,6 +20,15 @@ main {
     align-items: center;
     justify-content: space-around;
     font-size: 26px;
+}
+
+.menu span {
+    display: none;
+    margin-top: 1rem;
+    background-color: firebrick;
+    font-size: 19px;
+    border-radius: 5px;
+    padding: 0.5rem;
 }
 
 .menu input {
@@ -35,9 +47,61 @@ main {
     color: white;
 }
 
-.menu button:hover {
+button:hover {
     transition: ease-in-out, 1s;
     transform: scale(1.05);
+}
+
+.row {
+    display: flex;
+}
+
+.cell {
+    background-color: rgb(43, 43, 150);
+    border: 2px solid black;
+    height: 45px;
+    width: 45px;
+}
+
+.placement-container {
+    display: flex;
+}
+
+.placement-container button {
+    height: 35px;
+    margin: 1rem 0 0 1rem;
+    background-color: rgb(168, 89, 243);
+    color: white;
+    border-radius: 5px;
+}
+
+#new-ship {
+    display: flex;
+}
+
+#button-container {
+    display: flex;
+}
+
+#button-container button {
+    background-color: beige;
+    border-radius: 5px;
+    padding: 0.5rem;
+    margin-left: 7rem;
+}
+
+#start-game-container {
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#start-game-container button {
+    background-color: rgb(6, 191, 6);
+    color: white;
+    padding: 1rem;
+    border-radius: 5px;
 }
 
 footer {
