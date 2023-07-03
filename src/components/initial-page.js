@@ -1,3 +1,6 @@
+import { validate } from "./validate.js";
+import { startGame } from "../game/startGame.js";
+
 export function menuScreen() {
     const header = buildHeader();
 
@@ -26,14 +29,28 @@ function buildSection() {
     label.setAttribute("for", "name");
     label.textContent = "Please enter your name";
 
+    const span = document.createElement("span");
+    span.textContent = "Name must be at least one character";
+
     const input = document.createElement("input");
     input.setAttribute("id", "name");
     input.setAttribute("type", "text");
+    input.setAttribute("maxlength", "20");
 
     const button = document.createElement("button");
     button.textContent = "Start Game";
+    button.setAttribute("class", "start");
+    
+    button.addEventListener("click", () => {
+        let name = document.querySelector("#name").value;
+        name = name.trim();
 
-    section.append(label, input, button);
+        if (validate(name)) {
+            startGame(name);
+        }
+    });
+
+    section.append(label, span, input, button);
 
     return section;
 }
