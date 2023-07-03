@@ -1,3 +1,3 @@
-import { startGame } from "./game/startGame.js";
+import { menuScreen } from "./components/initial-page.js";
 
-startGame();
+menuScreen();
