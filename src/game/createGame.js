@@ -5,8 +5,12 @@ export function createGame(ship) {
     document.querySelector("main").innerHTML = "";
 
     const gameContainer = document.createElement("div");
+    gameContainer.setAttribute("id", "setup-container");
 
     const grid = createGrid("Place ships whithout overlapping them");
+
+    const error = document.createElement("span");
+    error.textContent = "Place all ships before starting";
 
     const placementContainer = document.createElement("section");
     placementContainer.classList.add("placement-container");
@@ -47,7 +51,7 @@ export function createGame(ship) {
 
     startGameContainer.appendChild(startGame);
 
-    gameContainer.append(grid, placementContainer, newShip,
+    gameContainer.append(error, grid, placementContainer, newShip,
         buttonContainer, startGameContainer);
     
     document.querySelector("main").append(gameContainer);
@@ -62,5 +66,4 @@ function changePlacement(header, button) {
         header.textContent = "Current placement: horizontal";
         button.textContent = "Change to vertical";
     }
-
 }

@@ -1,13 +1,14 @@
 export function getOrientation() {
-    const orientationElement = document.getElementById("current-placement").textContent;
+    const orientationElement = 
+        document.getElementById("current-placement").textContent;
 
-    const placement = orientationElement.slice(-1);
+    const placement = orientationElement.split(" ").slice(-1).toString();
 
-    switch (axis) {
-        case "x": {
+    switch (placement) {
+        case "horizontal": {
             return "horizontal";
         }
-        case "y": {
+        case "vertical": {
             return "vertical";
         }
     }
