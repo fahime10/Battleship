@@ -1,15 +1,14 @@
-import { Ship } from "../classes/ship.js";
-import { Gameboard } from "../classes/gameboard.js";
 import { Player } from "../classes/player.js";
-import { menuScreen } from "../components/initial-page";
 import { createGame } from "./createGame.js";
 import { placingShip } from "../components/placingShip.js";
+import { getOrientation } from "../game/orientation.js";
+import { gameLoop } from "../game/gameLoop.js";
 
 export function startGame(name) {
     let player = new Player(name);
     createGame(player.ships[0].length);
 
-    const cells = document.querySelectorAll(".grid .cells");
+    const cells = document.querySelectorAll(".grid .cell");
     cells.forEach((cell) => {
         cell.addEventListener("mouseover", () => {
             removeHoverFromCells(cells);
@@ -27,6 +26,7 @@ export function startGame(name) {
         changeNextShip(player.ships[0]);
 
         resetCells(cells);
+        document.querySelector("span").style.display = "none";
     });
 
     const random = document.getElementById("random-button");
@@ -34,6 +34,11 @@ export function startGame(name) {
         removeHoverFromCells(cells);
         randomPlacing(player, cells);
     });
+
+    const start = document.getElementById("start-button");
+    start.addEventListener("click", () => {
+        createGameLoop(player);
+    })
 }
 
 function removeHoverFromCells(cells) {
@@ -56,7 +61,7 @@ function gridListener(cell, ship, player) {
     const shipArrayLength = new Array(ship.length).fill(" ");
     let positionToInt = { x: parseInt(position.x), y: parseInt(position.y) };
 
-    if (player.gameboard.checkOutOfBounds(shipArrayLength, positionToInt, placement) === "collision") {
+    if (player.gameboard.checkOutOfBounds(positionToInt, placement, shipArrayLength) === "collision") {
         positionToInt = { x: parseInt(position.x), y: parseInt(position.y) };
         moveUntilError(positionToInt, placement, shipArrayLength, player);
         return;
@@ -89,7 +94,7 @@ function moveUntilError(position, placement, lengthArray, player) {
 
 function hoverOnShip(length, placement, position) {
     for (let i = 0; i < length; i++) {
-        const element = document.querySelector(`[location=\'{"x": "${startPos.x}", "y": "${startPos.y}"}\']`);
+        const element = document.querySelector(`[location=\'{"x": "${position.x}", "y": "${position.y}"}\']`);
 
         element.classList.add("hover-effect");
 
@@ -108,7 +113,7 @@ function changeNextShip(ship) {
         length = ship.length;
     }
 
-    const previousShip = document.getElementById("next-ship");
+    const previousShip = document.getElementById("new-ship");
     const nextShip = placingShip(length);
 
     previousShip.replaceWith(nextShip);
@@ -120,6 +125,28 @@ function resetCells(cells) {
         cell.classList.remove("hover-effect");
         cell.classList.remove("cell-error");
     });
+}
+
+function placeShip(cell, player) {
+    if (player.ships.length === 0) {
+        return;
+    }
+
+    if (cell.classList.contains("cell-error")) {
+        return;
+    }
+
+    const allHover = document.querySelectorAll(".hover-effect");
+    allHover.forEach((shipElement) => {
+        shipElement.classList.add("ship");
+        shipElement.classList.remove("hover-effect");
+    });
+
+    const position = JSON.parse(cell.getAttribute("location"));
+    const placement = getOrientation();
+
+    player.placeShip(position.x, position.y, placement);
+    changeNextShip(player.ships[0]);
 }
 
 function randomPlacing(player) {
@@ -141,4 +168,17 @@ function randomPlacing(player) {
     }
 
     changeNextShip(player.ships[0]);
+}
+
+function createGameLoop(player) {
+    if (player.ships.length != 0) {
+        document.querySelector("span").style.display = "block";
+        return;
+    }
+
+    const gridContainer = document.querySelector("#setup-container").cloneNode(true);
+
+    document.querySelector("main").innerHTML = "";
+
+    gameLoop(gridContainer, player);
 }
