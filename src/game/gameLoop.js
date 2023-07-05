@@ -8,6 +8,9 @@ let waitingTurn = false;
 let gameOver = false;
 
 export function gameLoop(playerGrid, player) {
+    isPlayerTurn = true;
+    waitingTurn = false;
+    gameOver = false;
     createGameScreen(playerGrid);
     move = document.getElementById("move");
     const computer = new Player("Computer");
@@ -22,16 +25,16 @@ export function gameLoop(playerGrid, player) {
 }
 
 function clickListeners(cell, computer, player) {
-    playerClick(cell, computer, player.name);
-    enemyAttack(player);
+    playerClick(cell, computer, player);
+    enemyAttack(computer, player);
 
-    if (cell.classList.contains("attacked")) {
+    if (cell.classList.contains("attack")) {
         const clone = cell.cloneNode(true);
         cell.replaceWith(clone);
     }
 }
 
-function playerClick(cell, computer, playerName) {
+function playerClick(cell, computer, player) {
     if (isPlayerTurn !== true || gameOver) {
         return;
     }
@@ -41,69 +44,74 @@ function playerClick(cell, computer, playerName) {
     const x = parseInt(position.x);
     const y = parseInt(position.y);
 
-    const result = computer.gameboard.receiveAttack(position);
-    modifyBoard(result, cell, playerName, "The enemy");
-    isGameOver(computer, playerName);
+    const result = computer.gameboard.receiveAttack({ x: x, y: y });
+    modifyBoard(result, cell, player, computer);
+    isGameOver(computer, player.name);
 }
 
-function modifyBoard(result, cell, name, target) {
+function modifyBoard(result, cell, player, target) {
     switch (result) {
         case "sunk" : {
-            move.textContent = `"${name} sunk the ${target} ship!`;
-            cell.classList.add("attacked", "hit");
+            move.textContent = `${player.name} sunk ${target.name}'s ship!`;
+            cell.classList.add("attack", "hit");
             cell.ariaLabel = "hit";
+            player.sinkShip();
             break;
         }
         case "hit": {
-            move.textContent = `"${name} hit the ${target} ship!`;
-            cell.classList.add("attacked", "hit");
+            move.textContent = `${player.name} hit ${target.name}'s ship!`;
+            cell.classList.add("attack", "hit");
             cell.ariaLabel = "hit";
             break;
         }
         case "miss": {
-            move.textContent = `"${name} missed ship!`;
-            cell.classList.add("attacked", "hit");
-            cell.ariaLabel = "hit";
+            move.textContent = `${player.name}'s missile missed!`;
+            cell.classList.add("attack", "miss");
+            cell.ariaLabel = "miss";
             break;
         }
     }
 }
 
 function isGameOver(player, name) {
-    const result = player.gameboard.checkSunk();
+    if (player.noShips === 0) {
+        gameOver = true;
 
-    if (!result) {
-        return;
+        const main = document.querySelector("main");
+        const container = document.getElementById("game-screen");
+
+        main.removeChild(container);
+
+        endScreen(name);
     }
-    
-    gameOver = true;
-
-    const main = document.querySelector("main");
-    const container = document.getElementById("game-screen");
-
-    main.removeChild(container);
-
-    endScreen(name);
 }
 
-function enemyAttack(player) {
+function enemyAttack(computer, player) {
     if (isPlayerTurn !== false || waitingTurn || gameOver) {
         return;
     }
 
     waitingTurn = true;
+
     setTimeout(() => {
         move.textContent = "Enemy's turn to attack!";
         setTimeout(() => {
             const result = player.randomAttack();
             
-            const element = document.querySelector(`#player-grid [location=\'{"x": "${result.x}", "y": "${result.y}"}\']`);
+            const placeHit = player.recordMove();
 
-            modifyBoard(result, element, "The enemy", "our");
+            const element = document.querySelector(`#player-grid [location=\'{"x": "${placeHit.x}", "y": "${placeHit.y}"}\']`);
+
+            modifyBoard(result, element, computer, player);
 
             isPlayerTurn = !isPlayerTurn;
             waitingTurn = false;
-            isGameOver(player, "Computer");
-        }, 400);
-    }, 2000);
+
+            isGameOver(player, computer.name);
+        }, 9);
+    }, 2);
+
+    if (waitingTurn != true) {
+        document.querySelector("#move").textContent = "Ready to fire, sir!";
+    }
 }

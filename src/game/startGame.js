@@ -38,7 +38,7 @@ export function startGame(name) {
     const start = document.getElementById("start-button");
     start.addEventListener("click", () => {
         createGameLoop(player);
-    })
+    });
 }
 
 function removeHoverFromCells(cells) {
