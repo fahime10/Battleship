@@ -1,12 +1,16 @@
 import { Gameboard } from "./gameboard.js";
 import { Ship } from "./ship.js";
 
+let x = 0;
+let y = 0;
+
 export class Player {
     constructor(name) {
         this.name = name;
         this.gameboard = new Gameboard();
         this.ships = createShips();
         this.moves = availableMoves();
+        this.noShips = this.ships.length;
     }
 
     placeShip(x, y, placement) {
@@ -30,10 +34,6 @@ export class Player {
         }
     }
 
-    receiveAttack(x, y) {
-        
-    }
-
     randomAttack() {
         let coord = this.moves[Math.floor(Math.random() * this.moves.length)];
         const index = this.moves.indexOf(coord);
@@ -42,8 +42,18 @@ export class Player {
             this.moves.splice(index, 1);
         }
 
-        this.gameboard.receiveAttack(coord);
-        return coord;
+        x = coord.x;
+        y = coord.y;
+
+        return this.gameboard.receiveAttack(coord);
+    }
+
+    recordMove() {
+        return { x: x, y: y };
+    }
+
+    sinkShip() {
+        this.noShips--;
     }
 }
 

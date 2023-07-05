@@ -1,6 +1,7 @@
-import { menuScreen } from "../components/initial-page.js";
+import { menuScreen } from "./initial-page.js";
 
 export function createEndScreen(winner) {
+    console.log(winner);
     const main = document.querySelector("main");
 
     const endContainer = document.createElement("div");
@@ -13,7 +14,7 @@ export function createEndScreen(winner) {
     winnerText.textContent = "The winner is: ";
 
     const winnerName = document.createElement("p");
-    winner.setAttribute("id", "winner-name");
+    winnerName.setAttribute("id", "winner-name");
     winnerName.textContent = winner;
 
     winnerSection.append(winnerText, winnerName);
@@ -22,7 +23,7 @@ export function createEndScreen(winner) {
     playAgain.setAttribute("id", "play-again");
     playAgain.textContent = "Play again?";
 
-    playAgain.addEventListener("click", () => {playAgainListener()});
+    playAgain.addEventListener("click", playAgainListener);
 
     endContainer.append(winnerSection, playAgain);
     main.appendChild(endContainer);
@@ -33,5 +34,7 @@ function playAgainListener() {
     const endContainer = document.getElementById("end-screen");
 
     main.removeChild(endContainer);
+    document.querySelector("body").innerHTML = "";
+
     menuScreen();
 }
