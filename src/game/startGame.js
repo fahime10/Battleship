@@ -176,9 +176,10 @@ function createGameLoop(player) {
         return;
     }
 
-    const gridContainer = document.querySelector("#setup-container").cloneNode(true);
-
-    document.querySelector("main").innerHTML = "";
+    const gridContainer = document.querySelector(".grid-container").cloneNode(true);
+    
+    const setupContainer = document.querySelector("#setup-container");
+    document.querySelector("main").removeChild(setupContainer);
 
     gameLoop(gridContainer, player);
 }

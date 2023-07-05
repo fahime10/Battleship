@@ -30,6 +30,10 @@ export class Player {
         }
     }
 
+    receiveAttack(x, y) {
+        
+    }
+
     randomAttack() {
         let coord = this.moves[Math.floor(Math.random() * this.moves.length)];
         const index = this.moves.indexOf(coord);
@@ -38,7 +42,8 @@ export class Player {
             this.moves.splice(index, 1);
         }
 
-        return this.gameboard.receiveAttack(coord);
+        this.gameboard.receiveAttack(coord);
+        return coord;
     }
 }
 
